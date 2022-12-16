@@ -1,0 +1,35 @@
+version: '3.9'
+services:
+  google-stunnel-ldap:
+    build: .
+    container_name: google-stunnel-ldap
+    ports:
+      - "1636:1636"
+      - "8888:80"
+      - "8443:443"
+    volumes:
+      # - stunnel_ca_cert:/etc/ssl/certs/:ro
+      # - stunnel_config:/etc/stunnel/:ro
+      # - lighttpd_config:/etc/lighttpd/:ro
+      # - lighttpd_html:/var/www/html/
+      - type: bind
+        source: ./local/ca/
+        target: /etc/ssl/certs/
+      - type: bind
+        source: ./local/stunnel/
+        target: /etc/stunnel/
+      - type: bind
+        source: ./local/lighttpd/
+        target: /etc/lighttpd/
+      - type: bind
+        source: ./local/html/
+        target: /var/www/html/
+    restart: unless-stopped
+    network_mode: bridge
+#    stdin_open: true
+#    tty: true
+volumes:
+  stunnel_ca_cert:
+  stunnel_config:
+  lighttpd_config:
+  lighttpd_html:
